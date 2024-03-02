@@ -7,8 +7,9 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install any needed dependencies specified in requirements.txt ***will be used in the future *** 
-# RUN pip install --no-cache-dir -r requirements.txt
+# Install any needed dependencies specified in requirements.txt 
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Run the Python script
-CMD ["sh", "-c", "python version.py "]
+expose 5000 
+
+CMD ["python3", "app.py"]

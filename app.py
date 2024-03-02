@@ -18,7 +18,7 @@ def version():
 
     return APP_VERSION
 
-@app.route("/Temperature")
+@app.route("/temperature")
 def temperature():
 
     r= requests.get(f"https://api.opensensemap.org/boxes/{TARGET_ID}?format=json",timeout=600)

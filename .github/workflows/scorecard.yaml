@@ -1,0 +1,49 @@
+name: Scorecard supply-chain security
+on:
+  branch_protection_rule:
+
+  schedule:
+    - cron: '45 8 * * 3'
+  push:
+    branches: [ "dev" ]
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+
+      security-events: write
+
+      id-token: write
+
+
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@main
+        with:
+          persist-credentials: false
+
+      - name: "Run analysis"
+        uses: ossf/scorecard-action@main
+        with:
+          results_file: results.sarif
+          results_format: sarif
+
+          publish_results: true
+
+      # Upload the results as artifacts (optional). Commenting out will disable uploads of run results in SARIF
+
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@main
+        with:
+          name: SARIF file
+          path: results.sarif
+          retention-days: 5
+
+      # Upload the results to GitHub's code scanning dashboard.
+      - name: "Upload to code-scanning"
+        uses: github/codeql-action/upload-sarif@17573ee1cc1b9d061760f3a006fc4aac4f944fd5 # v2.2.4
+        with:
+          sarif_file: results.sarif
